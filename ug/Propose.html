@@ -1,0 +1,40 @@
+{{ block title }}
+    第一阶段决策
+{{ endblock }}
+{{ block content }}
+
+测试用参数 {{params}}
+
+<p>你是{{player.role}}</p>
+
+<table style="text-align: center" class = 'table table-bordered table-hover table-condensed'>
+<thead>
+  <tr>
+    <th>选择</th>
+    <th><input class="form-check-input" type="radio" id="id_choice-0" name="choice" required="" value="A"> <label for="id_choice-0">方案A</label></th>
+    <th><input class="form-check-input" type="radio" id="id_choice-1" name="choice" required="" value="B"> <label for="id_choice-1">方案B</label></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>你的收益</td>
+    <td>{{params.a_prop}}</td>
+    <td>{{params.b_prop}}</td>
+  </tr>
+  <tr>
+    <td>配对者收益</td>
+    <td>{{params.a_resp}}</td>
+    <td>{{params.b_resp}}</td>
+  </tr>
+  <tr>
+    <td>双方总收益</td>
+    <td>{{params.high}}</td>
+    <td>{{params.low}}</td>
+  </tr>
+</tbody>
+</table>
+
+
+    {{ next_button }}
+
+{{ endblock }}

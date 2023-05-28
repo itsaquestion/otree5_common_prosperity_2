@@ -1,0 +1,42 @@
+{{ block title }}
+第一阶段决策
+{{ endblock }}
+{{ block content }}
+
+<p>你是{{player.role}}，提议者选择了下表中的{{group.choice}}<!-- 插入变量choice -->。</p>
+
+
+<table style="text-align: center" class = 'table table-bordered table-hover table-condensed'>
+    <thead>
+    <tr>
+        <th>选择</th>
+        <th>方案A</th>
+        <th>方案B</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>你的收益</td>
+        <td>{{params.a_resp}}</td>
+        <td>{{params.b_resp}}</td>
+    </tr>
+    <tr>
+        <td>配对者收益</td>
+        <td>{{params.a_prop}}</td>
+        <td>{{params.b_prop}}</td>
+    </tr>
+    <tr>
+        <td>双方总收益</td>
+        <td>{{params.high}}</td>
+        <td>{{params.low}}</td>
+    </tr>
+    </tbody>
+</table>
+
+
+{{formfield player.respond}}
+
+如果有疑问，请举手示意。若没有问题，请点击○选择方案。
+    {{ next_button }}
+
+{{ endblock }}
