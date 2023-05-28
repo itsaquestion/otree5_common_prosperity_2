@@ -185,7 +185,6 @@ class RespWaitPage(WaitPage):
 
         group.respond = p2.respond
 
-        print(f'{p2.respond=}')
         if not p2.respond:
             group.real_plan = 'A' if p1.choice == 'B' else 'A'
 
@@ -212,4 +211,4 @@ class Results(Page):
     pass
 
 
-page_sequence = [Intro, Propose, PropWaitPage, Respond, RespWaitPage, S1Results, ResultsWaitPage, Results]
+page_sequence = [Intro, Propose, PropWaitPage, Respond, RespWaitPage, S1Results,]
