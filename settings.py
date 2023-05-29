@@ -32,7 +32,7 @@ SESSION_CONFIGS = [
     ),
 
     dict(
-        name='inequity_aversion(未完成)',
+        name='inequity_aversion_unfinished',
         app_sequence=['inequity_aversion'],
         num_demo_participants=2,
     ),
