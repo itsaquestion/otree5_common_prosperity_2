@@ -1,0 +1,16 @@
+{% extends "global/Page.html" %}
+{{ block title }}
+第一阶段决策
+{{ endblock }}
+{{ block content }}
+
+
+<p>计算机已随机为你匹配新的参与者。你的身份为<!-- 插入变量role --> {{player.role}} 。</p>
+<p>配对者将分给你<!-- 插入变量offer--> {{group.offer}} 代币，留给自己<!-- 插入变量offer--> 代币。</p>
+
+{{formfield player.respond}}
+
+<p>确定提交，请点击“下一页”。</p>
+    {{ next_button }}
+
+{{ endblock }}

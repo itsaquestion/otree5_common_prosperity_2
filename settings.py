@@ -30,6 +30,12 @@ SESSION_CONFIGS = [
         app_sequence=['demographics'],
         num_demo_participants=1,
     ),
+
+    dict(
+        name='inequity_aversion(未完成)',
+        app_sequence=['inequity_aversion'],
+        num_demo_participants=2,
+    ),
 ]
 
 ROOMS = [

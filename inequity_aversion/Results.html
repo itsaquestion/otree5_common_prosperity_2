@@ -1,0 +1,24 @@
+{{ block title }}
+    Page title
+{{ endblock }}
+
+{{ block content }}
+
+（此页面展示给提议者）
+
+r
+
+配对者<!-- 插入变量respond->你的提议。
+你在本轮的收益为<!-- 插入变量revenue-->代币。
+
+请点击“下一页”开始下一轮决策。
+
+（此页面展示给回应者）
+你<!-- 插入变量respond->配对者的提议。
+你在本轮的收益为<!-- 插入变量revenue-->代币。
+
+请点击“下一页”开始下一轮决策。
+    {{ next_button }}
+{{ endblock }}
+
+

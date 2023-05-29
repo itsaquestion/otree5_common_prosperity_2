@@ -1,0 +1,17 @@
+
+{% extends "global/Page.html" %}
+{{ block title }}
+    任务四第<!-- 插入轮次 --> {{player.round_number}} 轮
+{{ endblock }}
+{{ block content }}
+
+
+<p>计算机已随机为你匹配新的参与者。你的身份为<!-- 插入变量role --> {{player.role}} ，请你提议一个分配20代币的方案。</p>
+
+<p>{{formfield player.offer}}</p>
+
+<p>确定提交，请点击“下一页”。</p>
+
+    {{ next_button }}
+
+{{ endblock }}
