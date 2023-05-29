@@ -12,6 +12,13 @@ SESSION_CONFIGS = [
         app_sequence=['ug'],
         num_demo_participants=8,
     ),
+
+    dict(
+        name='preface',
+        app_sequence=['preface'],
+        num_demo_participants=1,
+    ),
+
     dict(
         name='holt_risk_x2_results_payment',
         app_sequence=['holt_risk', 'holt_risk_2', 'results_payment'],
