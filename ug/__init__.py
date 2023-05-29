@@ -2,7 +2,6 @@ import itertools
 import random
 
 import pandas as pd
-import numpy as np
 
 from otree.api import *
 
@@ -98,6 +97,8 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    treatment = models.StringField()
+
     choice = models.StringField(
         choices=['A', 'B'],
         widget=widgets.RadioSelect,
@@ -114,6 +115,11 @@ class Player(BasePlayer):
     profit = models.IntegerField()
     partner_profit = models.IntegerField()
 
+    offer = models.IntegerField()
+
+    expect_offer = models.IntegerField()
+
+    guess_offer = models.IntegerField()
 
 # PAGES
 class MyPage(Page):
@@ -203,7 +209,7 @@ class ResultsWaitPage(Page):
     pass
 
 
-class S1Results(Page):
+class RespResults(Page):
     pass
 
 
@@ -211,4 +217,19 @@ class Results(Page):
     pass
 
 
-page_sequence = [Intro, Propose, PropWaitPage, Respond, RespWaitPage, S1Results,]
+class Offer(Page):
+    pass
+
+
+class OfferWaitPage(Page):
+    pass
+
+
+class OfferResult(Page):
+    pass
+
+
+page_sequence = [Intro,
+                 Propose, PropWaitPage, Respond, RespWaitPage, RespResults,
+                 Offer, OfferWaitPage, OfferResult,
+                 Results]
