@@ -1,0 +1,21 @@
+
+{% extends "global/Page.html" %}
+{{ block title }}
+    任务二第<!-- 插入轮次 --> {{player.round_number}} 轮第二阶段
+{{ endblock }}
+{{ block content }}
+
+<p>现在开始本轮第二阶段决策。</p>
+
+
+<p>你已实现的收益是<!-- 插入变量outcome--> {{player.profit}} 代币。</p>
+<p>配对者已实现的收益是<!-- 插入变量outcome--> {{player.partner_profit}} 代币。</p>
+<p>请问：</p>
+{{formfield player.hope}}
+
+{{formfield player.guess}}
+
+
+    {{ next_button }}
+
+{{ endblock }}

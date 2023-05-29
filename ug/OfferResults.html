@@ -1,0 +1,22 @@
+{% extends "global/Page.html" %}
+{{ block title }}
+任务二第<!-- 插入轮次 -->{{player.round_number}}轮决策结果及收益
+{{ endblock }}
+
+{{ block content }}
+
+{{if player.role == C.PROP_ROLE}}
+
+<p>你已转移 {{group.offer}} 代币给配对者。</p>
+{{else}}
+
+<p>配对者已转移 {{group.offer}} 代币给你。</p>
+{{endif}}
+
+<p>你在本轮最终获得收益为 {{player.profit}} 代币。</p>
+
+<p>如果有疑问，请举手示意。若没有问题，请点击下一页开始下一轮决策。</p>
+    {{ next_button }}
+{{ endblock }}
+
+

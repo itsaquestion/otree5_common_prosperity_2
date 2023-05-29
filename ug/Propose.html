@@ -1,11 +1,18 @@
+
+{% extends "global/Page.html" %}
 {{ block title }}
-    第一阶段决策
+    任务二第<!-- 插入轮次 --> {{player.round_number}} 轮第一阶段
 {{ endblock }}
 {{ block content }}
 
-测试用参数 {{params}}
 
-<p>你是{{player.role}}</p>
+测试用配对组合 {{gm}}
+
+<p>任务二中每轮决策包含两个阶段。</p>
+<p>计算机已随机为你匹配新的参与者。现在开始本轮第一阶段决策。</p>
+
+
+<p>你是{{player.role}}，请点击圆圈在两个收益分配方案中选择一个。</p>
 
 <table style="text-align: center" class = 'table table-bordered table-hover table-condensed'>
 <thead>

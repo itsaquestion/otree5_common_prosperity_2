@@ -13,7 +13,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'ug'
     PLAYERS_PER_GROUP = 2
-    NUM_ROUNDS = 2
+    NUM_ROUNDS = 4
     PROP_ROLE = '提议者'
     RESP_ROLE = '回应者'
 
@@ -94,6 +94,7 @@ class Group(BaseGroup):
     choice = models.StringField()
     respond = models.BooleanField()
     real_plan = models.StringField()
+    offer = models.IntegerField()
 
 
 class Player(BasePlayer):
@@ -115,15 +116,24 @@ class Player(BasePlayer):
     profit = models.IntegerField()
     partner_profit = models.IntegerField()
 
-    offer = models.IntegerField()
+    offer = models.IntegerField(
+        min=0,
+        label='你愿意转移多少代币给配对者？'
+    )
 
-    expect_offer = models.IntegerField()
+    hope = models.IntegerField(
+        min=0,
+        label='1. 你希望配对者转移多少代币给你？'
+    )
 
-    guess_offer = models.IntegerField()
+    guess = models.IntegerField(
+        min=0,
+        label='2.你猜测配对者实际将转移多少代币给你？'
+    )
 
-# PAGES
-class MyPage(Page):
-    pass
+
+def offer_max(player):
+    return player.profit
 
 
 class Intro(Page):
@@ -192,7 +202,11 @@ class RespWaitPage(WaitPage):
         group.respond = p2.respond
 
         if not p2.respond:
-            group.real_plan = 'A' if p1.choice == 'B' else 'A'
+            group.real_plan = 'A' if p1.choice == 'B' else 'B'
+
+        print(f'{p2.respond=}')
+        print(f'{p1.choice=}')
+        print(f'{group.real_plan=}')
 
         p1.profit = params[group.real_plan.lower() + '_prop']
         p2.profit = params[group.real_plan.lower() + '_resp']
@@ -218,18 +232,42 @@ class Results(Page):
 
 
 class Offer(Page):
-    pass
+    form_model = 'player'
+    form_fields = ['offer']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.role == C.PROP_ROLE
 
 
-class OfferWaitPage(Page):
-    pass
+class Guess(Page):
+    form_model = 'player'
+    form_fields = ['guess', 'hope']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.role == C.RESP_ROLE
 
 
-class OfferResult(Page):
+class OfferWaitPage(WaitPage):
+
+    @staticmethod
+    def after_all_players_arrive(group: Group):
+        p1 = group.get_player_by_role(C.PROP_ROLE)
+        p2 = group.get_player_by_role(C.RESP_ROLE)
+
+        group.offer = p1.offer
+
+        p1.profit -= p1.offer
+        p2.profit += p1.offer
+
+
+
+class OfferResults(Page):
     pass
 
 
 page_sequence = [Intro,
                  Propose, PropWaitPage, Respond, RespWaitPage, RespResults,
-                 Offer, OfferWaitPage, OfferResult,
-                 Results]
+                 Offer, Guess, OfferWaitPage, OfferResults
+                 ]

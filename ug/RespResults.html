@@ -1,3 +1,4 @@
+{% extends "global/Page.html" %}
 {{ block title }}
     第<!-- 插入轮次 -->{{player.round_number}}轮第一阶段决策结果
 {{ endblock }}
@@ -6,13 +7,15 @@
 
 {{if player.role == C.PROP_ROLE}}
 
-你选择了<!-- 插入choice -->{{group.choice}}，配对者选择<!-- 插入respond --> {{if group.respond}}接受{{else}}拒绝{{endif}} 该提案
+<p>你选择了<!-- 插入choice --> {{group.choice}}，配对者选择<!-- 插入respond --> {{if group.respond}}接受{{else}}拒绝{{endif}}
+    该提案。</p>
 {{else}}
 
-配对者选择了<!-- 插入choice -->{{group.choice}}，你选择<!-- 插入respond --> {{if group.respond}}接受{{else}}拒绝{{endif}} 该提案
+<p>配对者选择了<!-- 插入choice --> {{group.choice}}，你选择<!-- 插入respond --> {{if group.respond}}接受{{else}}拒绝{{endif}}
+    该提案。</p>
 {{endif}}
-你实现的收益是<!-- 插入变量outcome--> {{player.profit}}代币
-配对者实现的收益是<!-- 插入变量outcome-->{{player.partner_profit}}代币
+<p>你实现的收益是<!-- 插入变量outcome--> {{player.profit}} 代币。</p>
+<p>配对者实现的收益是<!-- 插入变量outcome--> {{player.partner_profit}} 代币。</p>
 
 
     {{ next_button }}
