@@ -1,23 +1,20 @@
 {{ block title }}
-    Page title
+    任务四第<!-- 插入轮次 -->{{player.round_number}}轮
 {{ endblock }}
 
 {{ block content }}
 
-（此页面展示给提议者）
 
-r
+{{if player.role == C.PROP_ROLE }}
+<p>配对者<!-- 插入变量respond--> {{if group.respond}} 接受 {{else}} 拒绝 {{endif}}你的提议。</p>
 
-配对者<!-- 插入变量respond->你的提议。
-你在本轮的收益为<!-- 插入变量revenue-->代币。
+{{else}}
+<p>你<!-- 插入变量respond--> {{if group.respond}} 接受 {{else}} 拒绝 {{endif}} 配对者的提议。</p>
+{{endif}}
 
-请点击“下一页”开始下一轮决策。
+<p>你在本轮的收益为<!-- 插入变量revenue--> {{player.profit}} 代币。</p>
 
-（此页面展示给回应者）
-你<!-- 插入变量respond->配对者的提议。
-你在本轮的收益为<!-- 插入变量revenue-->代币。
-
-请点击“下一页”开始下一轮决策。
+<p>请点击“下一页”开始下一轮决策。</p>
     {{ next_button }}
 {{ endblock }}
 

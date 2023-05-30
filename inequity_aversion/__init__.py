@@ -59,7 +59,7 @@ def creating_session(subsession: Subsession):
             return list(zip(tp_e, tp_o))
 
     rn = subsession.round_number
-    gm = regroup(t1p, rn % 2 == 1) + regroup(t2p, rn % 2 == 0)
+    gm = regroup(t1p, rn % 2 == 1) + regroup(t2p, rn % 2 == 1)
 
     print(f'{gm=}')
 
@@ -69,6 +69,7 @@ def creating_session(subsession: Subsession):
 
 class Group(BaseGroup):
     offer = models.FloatField()
+    respond = models.BooleanField()
 
 
 class Player(BasePlayer):
@@ -125,7 +126,15 @@ class Respond(Page):
 
 
 class ResultsWaitPage(WaitPage):
-    pass
+    @staticmethod
+    def after_all_players_arrive(group: Group):
+        group.respond = group.get_player_by_role(C.RESP_ROLE).respond
+        if not group.respond:
+            for p in group.get_players():
+                p.profit = 0
+        else:
+            group.get_player_by_role(C.PROP_ROLE).profit = group.offer
+            group.get_player_by_role(C.RESP_ROLE).profit = 20 - group.offer
 
 
 class Results(Page):
@@ -139,7 +148,7 @@ class Intro(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        info = [(p.participant.id, p.role) for p in player.subsession.get_players()]
+        info = [(p.id_in_subsession, p.role) for p in player.subsession.get_players()]
         gm = player.subsession.get_group_matrix()
 
         return dict(info=info, gm=gm)
