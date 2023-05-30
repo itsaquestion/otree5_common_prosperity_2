@@ -1,10 +1,22 @@
 from os import environ
 
 SESSION_CONFIGS = [
+
     dict(
-        name='ug_inequity',
+        name='full_4p',
+        app_sequence=['preface', 'holt_risk', 'ug', 'holt_risk_2', 'inequity_aversion', 'demographics'],
+        num_demo_participants=4,
+    ),
+    dict(
+        name='full_8p',
+        app_sequence=['preface', 'holt_risk', 'ug', 'holt_risk_2', 'inequity_aversion', 'demographics'],
+        num_demo_participants=8,
+    ),
+
+    dict(
+        name='ug_inequity_4p',
         app_sequence=['ug', 'inequity_aversion'],
-        num_demo_participants=2,
+        num_demo_participants=4,
     ),
 
     dict(
@@ -29,13 +41,7 @@ SESSION_CONFIGS = [
         name='demographics',
         app_sequence=['demographics'],
         num_demo_participants=1,
-    ),
-
-    dict(
-        name='inequity_aversion_unfinished',
-        app_sequence=['inequity_aversion'],
-        num_demo_participants=2,
-    ),
+    )
 ]
 
 ROOMS = [

@@ -24,6 +24,7 @@ def creating_session(subsession: Subsession):
     """保持treatment不变，treatment内随机组合，并且2轮扮演不同角色。
     """
 
+
     for p in subsession.get_players():
         p.treatment = p.participant.vars['treatment']
 
