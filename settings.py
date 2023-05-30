@@ -2,14 +2,14 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='ug',
-        app_sequence=['ug'],
+        name='ug_inequity',
+        app_sequence=['ug', 'inequity_aversion'],
         num_demo_participants=2,
     ),
 
     dict(
-        name='ug_p8',
-        app_sequence=['ug'],
+        name='ug_inequity_p8',
+        app_sequence=['ug', 'inequity_aversion'],
         num_demo_participants=8,
     ),
 

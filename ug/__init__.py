@@ -13,7 +13,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'ug'
     PLAYERS_PER_GROUP = 2
-    NUM_ROUNDS = 4
+    NUM_ROUNDS = 1
     PROP_ROLE = '提议者'
     RESP_ROLE = '回应者'
 
@@ -43,6 +43,7 @@ def creating_session(subsession: Subsession):
     tm = itertools.cycle(treatments)
     for p in subsession.get_players():
         p.treatment = next(tm)
+        p.participant.vars['treatment'] = p.treatment
 
     print([p.treatment for p in subsession.get_players()])
 

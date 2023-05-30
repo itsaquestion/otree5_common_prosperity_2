@@ -1,3 +1,5 @@
+import random
+
 from otree.api import *
 
 doc = """
@@ -19,7 +21,50 @@ class Subsession(BaseSubsession):
 
 
 def creating_session(subsession: Subsession):
-    subsession.group_randomly()
+    """保持treatment不变，treatment内随机组合，并且2轮扮演不同角色。
+    """
+
+    for p in subsession.get_players():
+        p.treatment = p.participant.vars['treatment']
+
+    treatments = list(set([p.treatment for p in subsession.get_players()]))
+
+    # 2个treatment组
+    t1p = [p.id_in_subsession for p in subsession.get_players() if p.treatment == treatments[0]]
+    t2p = [p.id_in_subsession for p in subsession.get_players() if p.treatment == treatments[1]]
+
+    print(f'{subsession.round_number=}')
+
+    def regroup(x, odd_first=True):
+        """ 返回一个奇数在前，或者偶数在前的乱序zip
+        1. 乱序
+        2. 提取奇数组和偶数组
+        3. 奇数和偶数组进行zip
+        4. 返回一个奇数在前，或者偶数在前的乱序zip
+        :param x: 要处理的list
+        :param odd_first: 是否奇数在前
+        :return: 乱序后的zip
+        """
+        tp = x.copy()
+        random.shuffle(tp)
+        # print(f"乱序:{tp}")
+
+        # 奇数
+        tp_o = [p for p in tp if p % 2 == 1]
+        tp_e = [p for p in tp if p % 2 == 0]
+
+        if odd_first:
+            return list(zip(tp_o, tp_e))
+        else:
+            return list(zip(tp_e, tp_o))
+
+    rn = subsession.round_number
+    gm = regroup(t1p, rn % 2 == 1) + regroup(t2p, rn % 2 == 0)
+
+    print(f'{gm=}')
+
+    subsession.set_group_matrix(gm)
+
 
 
 class Group(BaseGroup):
@@ -27,6 +72,8 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    treatment = models.StringField()
+
     respond = models.BooleanField(
         choices=[[True, '接受'],
                  [False, '拒绝']],
@@ -52,6 +99,13 @@ class Offer(Page):
     def is_displayed(player: Player):
         return player.role == C.PROP_ROLE
 
+    @staticmethod
+    def vars_for_template(player: Player):
+        info = [(p.participant.id, p.role) for p in player.subsession.get_players()]
+        gm = player.subsession.get_group_matrix()
+
+        return dict(info=info, gm=gm)
+
 
 class Respond(Page):
     """回应页面"""
@@ -60,7 +114,10 @@ class Respond(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        pass
+        info = [(p.participant.id, p.role) for p in player.subsession.get_players()]
+        gm = player.subsession.get_group_matrix()
+
+        return dict(info=info, gm=gm)
 
     @staticmethod
     def is_displayed(player: Player):
@@ -79,6 +136,13 @@ class Intro(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.subsession.round_number == 1
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        info = [(p.participant.id, p.role) for p in player.subsession.get_players()]
+        gm = player.subsession.get_group_matrix()
+
+        return dict(info=info, gm=gm)
 
 
 class OfferWaitPage(WaitPage):
