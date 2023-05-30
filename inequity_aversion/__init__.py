@@ -24,7 +24,6 @@ def creating_session(subsession: Subsession):
     """保持treatment不变，treatment内随机组合，并且2轮扮演不同角色。
     """
 
-
     for p in subsession.get_players():
         p.treatment = p.participant.vars['treatment']
 
@@ -67,9 +66,9 @@ def creating_session(subsession: Subsession):
     subsession.set_group_matrix(gm)
 
 
-
 class Group(BaseGroup):
     offer = models.FloatField()
+    keep = models.FloatField()
     respond = models.BooleanField()
 
 
@@ -90,6 +89,7 @@ class Player(BasePlayer):
         min=0, max=20,
         label='你将分给配对者多少代币？'
     )
+    keep = models.FloatField()
 
 
 # PAGES
@@ -129,13 +129,25 @@ class Respond(Page):
 class ResultsWaitPage(WaitPage):
     @staticmethod
     def after_all_players_arrive(group: Group):
-        group.respond = group.get_player_by_role(C.RESP_ROLE).respond
-        if not group.respond:
-            for p in group.get_players():
-                p.profit = 0
+        p1 = group.get_player_by_role(C.PROP_ROLE)
+        p2 = group.get_player_by_role(C.RESP_ROLE)
+
+        group.respond = p2.respond
+
+        if group.respond:
+            p1.profit = group.keep
+            p2.profit = group.offer
         else:
-            group.get_player_by_role(C.PROP_ROLE).profit = group.offer
-            group.get_player_by_role(C.RESP_ROLE).profit = 20 - group.offer
+            p1.profit = 0
+            p2.profit = 0
+
+        if group.round_number == C.NUM_ROUNDS:
+            for p in group.get_players():
+                pick = random.choice([1, 2])
+                p.participant.vars['ia'] = dict(
+                    pick=pick,
+                    profit=p.in_round(pick).profit
+                )
 
 
 class Results(Page):
@@ -159,7 +171,11 @@ class OfferWaitPage(WaitPage):
 
     @staticmethod
     def after_all_players_arrive(group: Group):
-        group.offer = group.get_player_by_role(C.PROP_ROLE).offer
+        p1 = group.get_player_by_role(C.PROP_ROLE)
+
+        group.offer = p1.offer
+        p1.keep = 20 - group.offer
+        group.keep = p1.keep
 
 
 page_sequence = [Intro, Offer, OfferWaitPage, Respond, ResultsWaitPage, Results]

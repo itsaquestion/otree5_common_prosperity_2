@@ -4,12 +4,12 @@ SESSION_CONFIGS = [
 
     dict(
         name='full_4p',
-        app_sequence=['preface', 'holt_risk', 'ug', 'holt_risk_2', 'inequity_aversion', 'demographics'],
+        app_sequence=['preface', 'holt_risk', 'ug', 'holt_risk_2', 'inequity_aversion', 'demographics','results_payment'],
         num_demo_participants=4,
     ),
     dict(
         name='full_8p',
-        app_sequence=['preface', 'holt_risk', 'ug', 'holt_risk_2', 'inequity_aversion', 'demographics'],
+        app_sequence=['preface', 'holt_risk', 'ug', 'holt_risk_2', 'inequity_aversion', 'demographics','results_payment'],
         num_demo_participants=8,
     ),
 

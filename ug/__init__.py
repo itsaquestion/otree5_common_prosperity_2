@@ -13,7 +13,7 @@ Your app description
 class C(BaseConstants):
     NAME_IN_URL = 'ug'
     PLAYERS_PER_GROUP = 2
-    NUM_ROUNDS = 1
+    NUM_ROUNDS = 10
     PROP_ROLE = '提议者'
     RESP_ROLE = '回应者'
 
@@ -95,7 +95,7 @@ class Group(BaseGroup):
     choice = models.StringField()
     respond = models.BooleanField()
     real_plan = models.StringField()
-    offer = models.IntegerField()
+    offer = models.FloatField()
 
 
 class Player(BasePlayer):
@@ -114,20 +114,22 @@ class Player(BasePlayer):
         label='请你决定是否接受提议者的分配方案？'
     )
 
-    profit = models.IntegerField()
-    partner_profit = models.IntegerField()
+    profit = models.FloatField()
+    partner_profit = models.FloatField()
 
-    offer = models.IntegerField(
+    offer = models.FloatField(
         min=0,
         label='你愿意转移多少代币给配对者？'
     )
 
-    hope = models.IntegerField(
+    keep = models.FloatField()
+
+    hope = models.FloatField(
         min=0,
         label='1. 你希望配对者转移多少代币给你？'
     )
 
-    guess = models.IntegerField(
+    guess = models.FloatField(
         min=0,
         label='2.你猜测配对者实际将转移多少代币给你？'
     )
@@ -262,6 +264,17 @@ class OfferWaitPage(WaitPage):
         p1.profit -= p1.offer
         p2.profit += p1.offer
 
+        if group.round_number == C.NUM_ROUNDS:
+            for p in group.get_players():
+                rounds = list(range(1, C.NUM_ROUNDS + 1))
+                pick = random.sample(rounds, 2)
+
+                profit = [p.in_round(x).profit for x in pick]
+
+                p.participant.vars['ug'] = dict(
+                    pick=pick,
+                    profit=profit
+                )
 
 
 class OfferResults(Page):

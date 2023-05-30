@@ -4,12 +4,9 @@
 {{ endblock }}
 {{ block content }}
 
-测试用{{info}}
-<br>
-测试用{{gm}}
 
 <p>计算机已随机为你匹配新的参与者。你的身份为<!-- 插入变量role --> {{player.role}} 。</p>
-<p>配对者将分给你<!-- 插入变量offer--> {{group.offer}} 代币，留给自己<!-- 插入变量offer--> 代币。</p>
+<p>配对者将分给你<!-- 插入变量offer--> {{group.offer}} 代币，留给自己<!-- 插入变量offer--> {{group.keep}} 代币。</p>
 
 {{formfield player.respond}}
 

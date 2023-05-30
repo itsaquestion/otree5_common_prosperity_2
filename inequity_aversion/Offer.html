@@ -4,14 +4,17 @@
     任务四第<!-- 插入轮次 --> {{player.round_number}} 轮
 {{ endblock }}
 {{ block content }}
+<style>
+    .input-field {
+        width: 5em; /* 设置宽度为5个字符的宽度 */
+    }
+</style>
 
-测试用{{info}}
-<br>
-测试用{{gm}}
+
 
 <p>计算机已随机为你匹配新的参与者。你的身份为<!-- 插入变量role --> {{player.role}} ，请你提议一个分配20代币的方案。</p>
 
-<p>{{formfield player.offer}}</p>
+    {{formfield player.offer}}
 
 <p>确定提交，请点击“下一页”。</p>
 
