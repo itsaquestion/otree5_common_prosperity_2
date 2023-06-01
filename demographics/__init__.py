@@ -182,6 +182,11 @@ class Player(BasePlayer):
         widget=widgets.RadioSelectHorizontal
     )
 
+    phone = models.IntegerField(
+        label='（可选）请问你是否愿意接受我们关于本实验的电话回访？如果愿意，请留下你的手机号码：',
+        blank=True
+    )
+
 
 def make_selection():
     return models.StringField(
@@ -216,7 +221,8 @@ class Survey(Page):
         'birth_prov',
         'tax',
         'fair',
-        'rich'
+        'rich',
+        'phone'
 
     ]
 
