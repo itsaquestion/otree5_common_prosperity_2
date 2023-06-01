@@ -1,11 +1,8 @@
-
 {% extends "global/Page.html" %}
 {{ block title }}
     任务二第<!-- 插入轮次 -->{{player.round_number}}轮第一阶段
 {{ endblock }}
 {{ block content }}
-
-
 
 <p>任务二中每轮决策包含两个阶段。</p>
 <p>计算机已随机为你匹配新的参与者。现在开始本轮第一阶段决策。</p>
@@ -40,7 +37,6 @@
 </tbody>
 </table>
 
-
-    {{ next_button }}
+{{ next_button}}
 
 {{ endblock }}
