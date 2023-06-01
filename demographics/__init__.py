@@ -182,8 +182,12 @@ class Player(BasePlayer):
         widget=widgets.RadioSelectHorizontal
     )
 
+    call_back = models.BooleanField(
+        label='请问你是否愿意接受我们关于本实验的电话回访？',
+        choices=['愿意', '不愿意']
+    )
     phone = models.IntegerField(
-        label='（可选）请问你是否愿意接受我们关于本实验的电话回访？如果愿意，请留下你的手机号码：',
+        label='如果愿意，请留下你的手机号码：',
         blank=True
     )
 
@@ -222,6 +226,7 @@ class Survey(Page):
         'tax',
         'fair',
         'rich',
+        'call_back',
         'phone'
 
     ]
