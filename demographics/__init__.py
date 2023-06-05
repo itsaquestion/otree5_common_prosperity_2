@@ -190,6 +190,10 @@ class Player(BasePlayer):
         label='如果愿意，请留下你的手机号码：',
         blank=True
     )
+    happy = models.IntegerField(
+        max = 10,
+        min = 0
+    )
 
 
 # PAGES
@@ -219,8 +223,8 @@ class Survey(Page):
         'fair',
         'rich',
         'call_back',
-        'phone'
-
+        'phone',
+        'happy'
     ]
 
 
