@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>提议者的选择</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="数据分析_files/libs/clipboard/clipboard.min.js"></script>
+<script src="数据分析_files/libs/quarto-html/quarto.js"></script>
+<script src="数据分析_files/libs/quarto-html/popper.min.js"></script>
+<script src="数据分析_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="数据分析_files/libs/quarto-html/anchor.min.js"></script>
+<link href="数据分析_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="数据分析_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="数据分析_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="数据分析_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="数据分析_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">提议者的选择</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-06-12T03:04:05.891109100Z&quot;,&quot;start_time&quot;:&quot;2023-06-12T03:04:05.863312500Z&quot;}" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 导入matplotlib.pyplot绘图库，其中plt.plot()是最常用的绘图函数之一</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>() <span class="co"># 默认用seaborn的绘图样式</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">"font.sans-serif"</span>]<span class="op">=</span>[<span class="st">"Microsoft YaHei"</span>] <span class="co">#设置字体。如果不设置，中文会乱码。这里采用微软雅黑'Microsoft YaHei'，如果显示不正常，也可以使用黑体'SimHei'或者宋体'SimSun'等</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">"axes.unicode_minus"</span>]<span class="op">=</span><span class="va">False</span> <span class="co">#该语句解决图像中的“-”负号的乱码问题</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib <span class="im">as</span> mpl</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#mpl.rcParams['figure.dpi'] = 300</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 绘图使用'svg'后端：svg是矢量格式，可以任意缩放均保持清晰，各种屏幕的显示良好。</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_formats <span class="op">=</span> [<span class="st">'svg'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-06-12T03:04:06.393183100Z&quot;,&quot;start_time&quot;:&quot;2023-06-12T03:04:05.909697Z&quot;}" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_expt_xlsx(path):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.read_excel(<span class="st">'data/6-6日实验数据94人.xlsx'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.dropna(how<span class="op">=</span><span class="st">'all'</span>,axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    df.columns <span class="op">=</span> pd.MultiIndex.from_tuples([<span class="bu">tuple</span>(col.split(<span class="st">'.'</span>)) <span class="cf">for</span> col <span class="kw">in</span> df.columns])</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-06-12T03:04:07.546073100Z&quot;,&quot;start_time&quot;:&quot;2023-06-12T03:04:06.398518200Z&quot;}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> read_expt_xlsx(<span class="st">'./data/6-6日实验数据94人.xlsx'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th colspan="10" data-quarto-table-cell-role="th" data-halign="left">participant</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th colspan="5" data-quarto-table-cell-role="th" data-halign="left">demographics</th>
+<th colspan="5" data-quarto-table-cell-role="th" data-halign="left">results_payment</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id_in_session</th>
+<th data-quarto-table-cell-role="th">code</th>
+<th data-quarto-table-cell-role="th">label</th>
+<th data-quarto-table-cell-role="th">_is_bot</th>
+<th data-quarto-table-cell-role="th">_index_in_pages</th>
+<th data-quarto-table-cell-role="th">_max_page_index</th>
+<th data-quarto-table-cell-role="th">_current_app_name</th>
+<th data-quarto-table-cell-role="th">_current_page_name</th>
+<th data-quarto-table-cell-role="th">time_started_utc</th>
+<th data-quarto-table-cell-role="th">visited</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th colspan="5" data-quarto-table-cell-role="th" data-halign="left">1</th>
+<th colspan="5" data-quarto-table-cell-role="th" data-halign="left">1</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th colspan="3" data-quarto-table-cell-role="th" data-halign="left">player</th>
+<th data-quarto-table-cell-role="th">group</th>
+<th data-quarto-table-cell-role="th">subsession</th>
+<th colspan="3" data-quarto-table-cell-role="th" data-halign="left">player</th>
+<th data-quarto-table-cell-role="th">group</th>
+<th data-quarto-table-cell-role="th">subsession</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">NaN</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">call_back</th>
+<th data-quarto-table-cell-role="th">phone</th>
+<th data-quarto-table-cell-role="th">happy</th>
+<th data-quarto-table-cell-role="th">id_in_subsession</th>
+<th data-quarto-table-cell-role="th">round_number</th>
+<th data-quarto-table-cell-role="th">id_in_group</th>
+<th data-quarto-table-cell-role="th">payoff</th>
+<th data-quarto-table-cell-role="th">final_payment</th>
+<th data-quarto-table-cell-role="th">id_in_subsession</th>
+<th data-quarto-table-cell-role="th">round_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>jzjabtoc</td>
+<td>pc_01</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 02:06:33.102</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>13533607389</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>31.98</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>m05vizam</td>
+<td>pc_02</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 02:06:35.983</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>NaN</td>
+<td>6</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>31.60</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>o135ko6y</td>
+<td>pc_03</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 02:06:40.522</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>NaN</td>
+<td>6</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>0</td>
+<td>48.60</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
+<td>a2mdbuef</td>
+<td>pc_04</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 02:06:43.970</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>NaN</td>
+<td>5</td>
+<td>1</td>
+<td>1</td>
+<td>4</td>
+<td>0</td>
+<td>53.00</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5</td>
+<td>iu4vt42g</td>
+<td>pc_05</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 02:06:47.890</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>NaN</td>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>5</td>
+<td>0</td>
+<td>50.60</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">89</td>
+<td>18</td>
+<td>pc2dx6f4</td>
+<td>pc_18</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 07:07:31.347</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>15816550068</td>
+<td>6</td>
+<td>1</td>
+<td>1</td>
+<td>18</td>
+<td>0</td>
+<td>47.00</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">90</td>
+<td>19</td>
+<td>ye4pfqln</td>
+<td>pc_19</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 07:07:35.243</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>NaN</td>
+<td>8</td>
+<td>1</td>
+<td>1</td>
+<td>19</td>
+<td>0</td>
+<td>44.00</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">91</td>
+<td>20</td>
+<td>ch9xbbhk</td>
+<td>pc_20</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 07:07:39.267</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>15607327819</td>
+<td>5</td>
+<td>1</td>
+<td>1</td>
+<td>20</td>
+<td>0</td>
+<td>53.10</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">92</td>
+<td>21</td>
+<td>c1356c92</td>
+<td>pc_21</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 07:07:45.608</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>NaN</td>
+<td>8</td>
+<td>1</td>
+<td>1</td>
+<td>21</td>
+<td>0</td>
+<td>44.00</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">93</td>
+<td>22</td>
+<td>trawnlov</td>
+<td>pc_22</td>
+<td>0</td>
+<td>117</td>
+<td>117</td>
+<td>results_payment</td>
+<td>Results</td>
+<td>2023-06-06 07:07:49.407</td>
+<td>1</td>
+<td>...</td>
+<td>1</td>
+<td>18126788057</td>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>22</td>
+<td>0</td>
+<td>36.95</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+<p>94 rows × 278 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-06-12T03:04:08.199630900Z&quot;,&quot;start_time&quot;:&quot;2023-06-12T03:04:07.841226700Z&quot;}" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> partial</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> types</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义一个新方法</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> select(df, columns, level<span class="op">=</span><span class="dv">0</span>):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 如果 columns 是单个字符串，将其转换为列表</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(columns, <span class="bu">str</span>):</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        columns <span class="op">=</span> [columns]</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 使用列表推导式选择指定 level 的列并保留原始顺序</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    selected_columns <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> col[level] <span class="kw">in</span> columns]</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> df[selected_columns]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> result</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> select_app(df, columns):</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> select(df, columns, level<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> select_rounds(df, rounds):</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(rounds, <span class="bu">int</span>):</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        rounds <span class="op">=</span> [rounds]</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    rounds <span class="op">=</span> [<span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> rounds]</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> select(df, rounds, level<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> select_vars(df, <span class="bu">vars</span>):</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> select(df, <span class="bu">vars</span>, level<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> select_player(df):</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> select(df, <span class="st">'player'</span>, level <span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> select_group(df):</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> select(df, <span class="st">'group'</span>, level <span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> filter_var(df, expr):</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="co">    使用query语句，根据变量选择df的行。</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="co">    query语句中，变量名前必须加@，比如expr = '@role == "提议者"'。和query()一样，支持逻辑运算。</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co">    :param df: 要筛选的oTree数据</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">    :param expr: query语句的表达式，变量名前面要加@</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="co">    :return: 选行后的数据</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    last_level <span class="op">=</span> [col[<span class="op">-</span><span class="dv">1</span>] <span class="cf">for</span> col <span class="kw">in</span> df.columns]</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(<span class="bu">set</span>(last_level)) <span class="op">!=</span> <span class="bu">len</span>(last_level):</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"无法筛选：数据具有重复的oTree变量名。"</span>)</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    local_dict <span class="op">=</span> {col[<span class="op">-</span><span class="dv">1</span>]: df[col] <span class="cf">for</span> col <span class="kw">in</span> df.columns}</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> df.query(expr, local_dict<span class="op">=</span>local_dict)</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> res</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co"># 将新方法绑定到 DataFrame 类</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>pd.DataFrame.select <span class="op">=</span> select</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>pd.DataFrame.app <span class="op">=</span> select_app</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>pd.DataFrame.rounds <span class="op">=</span> select_rounds</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>pd.DataFrame.<span class="bu">vars</span> <span class="op">=</span> select_vars</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>pd.DataFrame.player <span class="op">=</span> select_player</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>pd.DataFrame.group <span class="op">=</span> select_group</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>pd.DataFrame.filter_var <span class="op">=</span> filter_var</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> df.app(<span class="st">'ug'</span>).player().rounds([<span class="dv">1</span>,<span class="dv">2</span>])<span class="co">#.vars(['role','treatment','choice'])#.filter_var('@role == "提议者"')</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th colspan="21" data-quarto-table-cell-role="th" data-halign="left">ug</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th colspan="10" data-quarto-table-cell-role="th" data-halign="left">1</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th colspan="10" data-quarto-table-cell-role="th" data-halign="left">2</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th colspan="10" data-quarto-table-cell-role="th" data-halign="left">player</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th colspan="10" data-quarto-table-cell-role="th" data-halign="left">player</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id_in_group</th>
+<th data-quarto-table-cell-role="th">role</th>
+<th data-quarto-table-cell-role="th">payoff</th>
+<th data-quarto-table-cell-role="th">treatment</th>
+<th data-quarto-table-cell-role="th">choice</th>
+<th data-quarto-table-cell-role="th">respond</th>
+<th data-quarto-table-cell-role="th">profit</th>
+<th data-quarto-table-cell-role="th">partner_profit</th>
+<th data-quarto-table-cell-role="th">offer</th>
+<th data-quarto-table-cell-role="th">hope</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">role</th>
+<th data-quarto-table-cell-role="th">payoff</th>
+<th data-quarto-table-cell-role="th">treatment</th>
+<th data-quarto-table-cell-role="th">choice</th>
+<th data-quarto-table-cell-role="th">respond</th>
+<th data-quarto-table-cell-role="th">profit</th>
+<th data-quarto-table-cell-role="th">partner_profit</th>
+<th data-quarto-table-cell-role="th">offer</th>
+<th data-quarto-table-cell-role="th">hope</th>
+<th data-quarto-table-cell-role="th">guess</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>提议者</td>
+<td>0</td>
+<td>cue</td>
+<td>A</td>
+<td>NaN</td>
+<td>200.0</td>
+<td>100</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>提议者</td>
+<td>0</td>
+<td>cue</td>
+<td>A</td>
+<td>NaN</td>
+<td>100</td>
+<td>100</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>提议者</td>
+<td>0</td>
+<td>cue</td>
+<td>A</td>
+<td>NaN</td>
+<td>100.0</td>
+<td>100</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>回应者</td>
+<td>0</td>
+<td>cue</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>170</td>
+<td>300</td>
+<td>NaN</td>
+<td>100.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2</td>
+<td>回应者</td>
+<td>0</td>
+<td>no_cue</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>100.0</td>
+<td>100</td>
+<td>NaN</td>
+<td>50.0</td>
+<td>...</td>
+<td>回应者</td>
+<td>0</td>
+<td>no_cue</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>150</td>
+<td>300</td>
+<td>NaN</td>
+<td>100.0</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1</td>
+<td>提议者</td>
+<td>0</td>
+<td>no_cue</td>
+<td>A</td>
+<td>NaN</td>
+<td>100.0</td>
+<td>100</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>回应者</td>
+<td>0</td>
+<td>no_cue</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>100</td>
+<td>100</td>
+<td>NaN</td>
+<td>30.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2</td>
+<td>回应者</td>
+<td>0</td>
+<td>cue</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>120.0</td>
+<td>200</td>
+<td>NaN</td>
+<td>50.0</td>
+<td>...</td>
+<td>提议者</td>
+<td>0</td>
+<td>cue</td>
+<td>A</td>
+<td>NaN</td>
+<td>230</td>
+<td>100</td>
+<td>70.0</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">89</td>
+<td>2</td>
+<td>回应者</td>
+<td>0</td>
+<td>cue</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>150.0</td>
+<td>200</td>
+<td>NaN</td>
+<td>50.0</td>
+<td>...</td>
+<td>回应者</td>
+<td>0</td>
+<td>cue</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>150</td>
+<td>300</td>
+<td>NaN</td>
+<td>100.0</td>
+<td>50.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">90</td>
+<td>1</td>
+<td>提议者</td>
+<td>0</td>
+<td>no_cue</td>
+<td>A</td>
+<td>NaN</td>
+<td>175.0</td>
+<td>100</td>
+<td>25.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>提议者</td>
+<td>0</td>
+<td>no_cue</td>
+<td>A</td>
+<td>NaN</td>
+<td>250</td>
+<td>100</td>
+<td>50.0</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">91</td>
+<td>2</td>
+<td>回应者</td>
+<td>0</td>
+<td>no_cue</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>100.0</td>
+<td>200</td>
+<td>NaN</td>
+<td>50.0</td>
+<td>...</td>
+<td>提议者</td>
+<td>0</td>
+<td>no_cue</td>
+<td>A</td>
+<td>NaN</td>
+<td>250</td>
+<td>100</td>
+<td>50.0</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">92</td>
+<td>1</td>
+<td>提议者</td>
+<td>0</td>
+<td>cue</td>
+<td>A</td>
+<td>NaN</td>
+<td>150.0</td>
+<td>100</td>
+<td>50.0</td>
+<td>NaN</td>
+<td>...</td>
+<td>回应者</td>
+<td>0</td>
+<td>cue</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>100</td>
+<td>100</td>
+<td>NaN</td>
+<td>50.0</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">93</td>
+<td>2</td>
+<td>回应者</td>
+<td>0</td>
+<td>cue</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>150.0</td>
+<td>200</td>
+<td>NaN</td>
+<td>50.0</td>
+<td>...</td>
+<td>回应者</td>
+<td>0</td>
+<td>cue</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>180</td>
+<td>300</td>
+<td>NaN</td>
+<td>100.0</td>
+<td>100.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>94 rows × 22 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-06-12T03:04:10.439239900Z&quot;,&quot;start_time&quot;:&quot;2023-06-12T03:04:08.150841100Z&quot;}" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> melt_app(df, column_names <span class="op">=</span> [<span class="st">'app'</span>,<span class="st">'round'</span>,<span class="st">'agent'</span>]):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">    把原始的app数据（可以多app且多round）从宽数据转为长数据</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">    :param df: app数据</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">    :param column_names: 前3列名称，默认是 ['app','rounds','agent']</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">    :return: app的长数据</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(column_names) <span class="op">!=</span> <span class="bu">len</span>(df.columns.names) <span class="op">-</span> <span class="dv">1</span>:</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"列名列表长度与列标题层次不匹配"</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 按照除最后一行之外的其他层级标题堆叠DataFrame</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    df_stacked <span class="op">=</span> df.stack(level<span class="op">=</span><span class="bu">list</span>(<span class="bu">range</span>(<span class="bu">len</span>(df.columns.names) <span class="op">-</span> <span class="dv">1</span>))).reset_index()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 重命名列标题</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    old_cols <span class="op">=</span> df_stacked.columns.to_list()</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    old_cols[<span class="dv">1</span>:<span class="bu">len</span>(column_names)<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> column_names</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    df_stacked.columns <span class="op">=</span> old_cols</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    df_final <span class="op">=</span> df_stacked.iloc[:,<span class="dv">1</span>:]</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">#df_final.columns = column_names +  df.columns.names[-1]</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    df_final.index.name <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    df_final[<span class="st">'round'</span>] <span class="op">=</span> df_final[<span class="st">'round'</span>].astype(<span class="bu">int</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    df_final <span class="op">=</span> df_final.sort_values(column_names[:<span class="dv">2</span>])</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df_final</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>mx <span class="op">=</span> melt_app(df.app(<span class="st">'ug'</span>)) <span class="co"># .query('role == "提议者"')</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>mx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">app</th>
+<th data-quarto-table-cell-role="th">round</th>
+<th data-quarto-table-cell-role="th">agent</th>
+<th data-quarto-table-cell-role="th">choice</th>
+<th data-quarto-table-cell-role="th">guess</th>
+<th data-quarto-table-cell-role="th">hope</th>
+<th data-quarto-table-cell-role="th">id_in_group</th>
+<th data-quarto-table-cell-role="th">id_in_subsession</th>
+<th data-quarto-table-cell-role="th">offer</th>
+<th data-quarto-table-cell-role="th">partner_profit</th>
+<th data-quarto-table-cell-role="th">payoff</th>
+<th data-quarto-table-cell-role="th">profit</th>
+<th data-quarto-table-cell-role="th">real_plan</th>
+<th data-quarto-table-cell-role="th">respond</th>
+<th data-quarto-table-cell-role="th">role</th>
+<th data-quarto-table-cell-role="th">round_number</th>
+<th data-quarto-table-cell-role="th">treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>ug</td>
+<td>1</td>
+<td>group</td>
+<td>A</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>5.0</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>A</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>ug</td>
+<td>1</td>
+<td>player</td>
+<td>A</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>100.0</td>
+<td>0.0</td>
+<td>200.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>提议者</td>
+<td>NaN</td>
+<td>cue</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>ug</td>
+<td>1</td>
+<td>subsession</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">30</td>
+<td>ug</td>
+<td>1</td>
+<td>group</td>
+<td>A</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>B</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">31</td>
+<td>ug</td>
+<td>1</td>
+<td>player</td>
+<td>A</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>100.0</td>
+<td>0.0</td>
+<td>100.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>提议者</td>
+<td>NaN</td>
+<td>cue</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2764</td>
+<td>ug</td>
+<td>10</td>
+<td>player</td>
+<td>A</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>10.0</td>
+<td>140.0</td>
+<td>0.0</td>
+<td>250.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>提议者</td>
+<td>NaN</td>
+<td>cue</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2765</td>
+<td>ug</td>
+<td>10</td>
+<td>subsession</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>10.0</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2793</td>
+<td>ug</td>
+<td>10</td>
+<td>group</td>
+<td>A</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>5.0</td>
+<td>0.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>A</td>
+<td>1.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2794</td>
+<td>ug</td>
+<td>10</td>
+<td>player</td>
+<td>NaN</td>
+<td>0.0</td>
+<td>100.0</td>
+<td>2.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>260.0</td>
+<td>0.0</td>
+<td>140.0</td>
+<td>NaN</td>
+<td>1.0</td>
+<td>回应者</td>
+<td>NaN</td>
+<td>cue</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2795</td>
+<td>ug</td>
+<td>10</td>
+<td>subsession</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>10.0</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+<p>2820 rows × 17 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-executetime="{&quot;end_time&quot;:&quot;2023-06-12T03:04:15.623357500Z&quot;,&quot;start_time&quot;:&quot;2023-06-12T03:04:10.435728200Z&quot;}" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> assign_pareto(value):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>  value <span class="op">==</span> <span class="dv">1</span> <span class="kw">or</span> value <span class="op">==</span> <span class="dv">2</span>:</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'weak'</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="dv">3</span> <span class="op">&lt;=</span> value <span class="op">&lt;=</span> <span class="dv">6</span>:</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'not'</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'strong'</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>mx[<span class="st">'pareto'</span>] <span class="op">=</span> mx[<span class="st">'round'</span>].<span class="bu">apply</span>(assign_pareto)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>mx.to_excel(<span class="st">'data/ug.xlsx'</span>,index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-is_executing="true" data-executetime="{&quot;start_time&quot;:&quot;2023-06-12T03:04:15.629923300Z&quot;}">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.stats <span class="im">import</span> chi2_contingency</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-is_executing="true">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mx.query(<span class="st">'round == 3'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-is_executing="true">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 提议者数据</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>prop_df <span class="op">=</span>  mx.query(<span class="st">'role == "提议者"'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="提议者选择a的比例按round" class="level3">
+<h3 class="anchored" data-anchor-id="提议者选择a的比例按round">提议者选择A的比例：按round</h3>
+<p>比例</p>
+<div class="cell" data-is_executing="true">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>choice_A_proportion <span class="op">=</span> prop_df[prop_df[<span class="st">'choice'</span>] <span class="op">==</span> <span class="st">'A'</span>].groupby([<span class="st">'round'</span>, <span class="st">'treatment'</span>]).size() <span class="op">/</span> prop_df.groupby([<span class="st">'round'</span>, <span class="st">'treatment'</span>]).size()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>choice_A_proportion <span class="op">=</span> choice_A_proportion.reset_index(name<span class="op">=</span><span class="st">'proportion'</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>choice_A_proportion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>卡方检验比较treatment差异</p>
+<div class="cell" data-is_executing="true">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">11</span>):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    tmp_df <span class="op">=</span> prop_df.query(<span class="st">'round == @i'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    contingency_table <span class="op">=</span> pd.crosstab(tmp_df[<span class="st">'treatment'</span>],tmp_df[<span class="st">'choice'</span>])</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">#display(contingency_tables)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    chi2, p_value, _, _ <span class="op">=</span> chi2_contingency(contingency_table)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"round </span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">,</span><span class="ch">\t</span><span class="ss"> Chi2: </span><span class="sc">{</span>chi2<span class="sc">:.2f}</span><span class="ss">, p-value: </span><span class="sc">{</span>p_value<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="绘图" class="level3">
+<h3 class="anchored" data-anchor-id="绘图">绘图</h3>
+<div class="cell" data-is_executing="true">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_compare(df, x,y,hue,figsize<span class="op">=</span>(<span class="dv">12</span>,<span class="dv">6</span>)):</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    custom_params <span class="op">=</span> {<span class="st">"axes.spines.right"</span>: <span class="va">False</span>, <span class="st">"axes.spines.top"</span>: <span class="va">False</span>}</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    sns.set_theme(style<span class="op">=</span><span class="st">"ticks"</span>, rc<span class="op">=</span>custom_params)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 设置图形大小</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>figsize)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 使用seaborn的barplot函数绘制柱状图</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> sns.barplot(x<span class="op">=</span>x, y<span class="op">=</span>y, hue<span class="op">=</span>hue, data<span class="op">=</span>df)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 在柱体顶端添加数字</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> p <span class="kw">in</span> ax.patches:</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        ax.annotate(<span class="ss">f"</span><span class="sc">{</span>p<span class="sc">.</span>get_height()<span class="sc">:.2f}</span><span class="ss">"</span>, (p.get_x() <span class="op">+</span> p.get_width() <span class="op">/</span> <span class="fl">2.</span>, p.get_height()),</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>                    ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'baseline'</span>, fontsize<span class="op">=</span><span class="dv">12</span>, color<span class="op">=</span><span class="st">'black'</span>, xytext<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">5</span>),</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                    textcoords<span class="op">=</span><span class="st">'offset points'</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ax</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plot_compare(choice_A_proportion,x<span class="op">=</span><span class="st">'round'</span>, y<span class="op">=</span><span class="st">'proportion'</span>, hue<span class="op">=</span><span class="st">'treatment'</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Round'</span>)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Proportion of Choice A'</span>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="fl">0.5</span>,<span class="fl">1.07</span>])</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置图例位置</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Proportion of Choice A by Round and Treatment"</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>ax.legend(title<span class="op">=</span><span class="st">'Treatment'</span>, loc<span class="op">=</span><span class="st">'center left'</span>, bbox_to_anchor<span class="op">=</span>(<span class="dv">1</span>, <span class="fl">0.5</span>), frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="提议者选择a比例按pareto" class="level2">
+<h2 class="anchored" data-anchor-id="提议者选择a比例按pareto">提议者选择A比例：按pareto</h2>
+<div class="cell" data-is_executing="true">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sort_col_by_list(df,col<span class="op">=</span><span class="st">'pareto'</span>, order<span class="op">=</span>[<span class="st">'weak'</span>,<span class="st">'not'</span>,<span class="st">'strong'</span>]):</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">    对于col列，按照指定的顺序排序</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">    :param df: 数据</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">    :param col: 指定的列</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">    :param order: 指定的顺序</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">    :return:</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 创建映射字典</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    order_dict <span class="op">=</span> {value: idx <span class="cf">for</span> idx, value <span class="kw">in</span> <span class="bu">enumerate</span>(order)}</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 应用映射，然后使用argsort进行排序</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    sorted_index <span class="op">=</span> df[col].<span class="bu">map</span>(order_dict).argsort()</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 根据排序后的索引重排DataFrame</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.iloc[sorted_index].reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-is_executing="true">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>choice_A_proportion <span class="op">=</span> prop_df[prop_df[<span class="st">'choice'</span>] <span class="op">==</span> <span class="st">'A'</span>].groupby([<span class="st">'pareto'</span>, <span class="st">'treatment'</span>]).size() <span class="op">/</span> prop_df.groupby([<span class="st">'pareto'</span>, <span class="st">'treatment'</span>]).size()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>choice_A_proportion <span class="op">=</span> choice_A_proportion.reset_index(name<span class="op">=</span><span class="st">'proportion'</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>choice_A_proportion <span class="op">=</span> sort_col_by_list(choice_A_proportion)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>choice_A_proportion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="对不同的帕累托组进行卡方检验" class="level3">
+<h3 class="anchored" data-anchor-id="对不同的帕累托组进行卡方检验">对不同的帕累托组进行卡方检验</h3>
+<div class="cell" data-is_executing="true">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="st">'weak'</span>,<span class="st">'not'</span>,<span class="st">'strong'</span>]:</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    tmp_df <span class="op">=</span> prop_df.query(<span class="st">'pareto in @i'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">#print(len(tmp_df))</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    contingency_table <span class="op">=</span> pd.crosstab(tmp_df[<span class="st">'treatment'</span>],tmp_df[<span class="st">'choice'</span>])</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">#display(contingency_table)</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    chi2, p_value, _, _ <span class="op">=</span> chi2_contingency(contingency_table)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"pareto '</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">',</span><span class="ch">\t</span><span class="ss"> Chi2: </span><span class="sc">{</span>chi2<span class="sc">:.2f}</span><span class="ss">, p-value: </span><span class="sc">{</span>p_value<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-is_executing="true">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plot_compare(choice_A_proportion,x<span class="op">=</span><span class="st">'pareto'</span>, y<span class="op">=</span><span class="st">'proportion'</span>, hue<span class="op">=</span><span class="st">'treatment'</span>,figsize<span class="op">=</span>(<span class="dv">7</span>,<span class="dv">6</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Pareto'</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Proportion of Choice A'</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="fl">0.5</span>,<span class="fl">1.05</span>])</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置图例位置</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>ax.legend(title<span class="op">=</span><span class="st">'Treatment'</span>, loc<span class="op">=</span><span class="st">'center left'</span>, bbox_to_anchor<span class="op">=</span>(<span class="dv">1</span>, <span class="fl">0.5</span>), frameon<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="提议者选择a的比例" class="level2">
+<h2 class="anchored" data-anchor-id="提议者选择a的比例">提议者选择A的比例</h2>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
